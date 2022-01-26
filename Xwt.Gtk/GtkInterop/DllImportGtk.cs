@@ -263,6 +263,11 @@ Pattern:
 		 
 		 
 		 */		
+#if XWT_GTKSHARP3
+		[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+		public delegate bool d_gtk_scrollable_get_border(IntPtr raw, IntPtr border);
+		public static d_gtk_scrollable_get_border gtk_scrollable_get_border = FuncLoader.LoadFunction<d_gtk_scrollable_get_border>(FuncLoader.GetProcAddress(GLibrary.Load(Library.Gtk), "gtk_scrollable_get_border"));
+#endif
 	}
 	
 }

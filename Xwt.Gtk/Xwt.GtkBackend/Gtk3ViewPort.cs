@@ -24,6 +24,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
+using System.Runtime.InteropServices;
+using static Xwt.Interop.DllImportGtk;
 
 namespace Xwt.GtkBackend
 {
@@ -85,8 +87,13 @@ namespace Xwt.GtkBackend
 		
 #if XWT_GTKSHARP3
 
-		bool Gtk.IScrollableImplementor.GetBorder (Gtk.Border border) {
-			return true;
+		bool Gtk.IScrollableImplementor.GetBorder (out Gtk.Border border) {
+			IntPtr native_border = Marshal.AllocHGlobal (Marshal.SizeOf<Gtk.Border>());
+			bool raw_ret = gtk_scrollable_get_border(Handle, native_border);
+			bool ret = raw_ret;
+			border = Gtk.Border.New (native_border);
+			Marshal.FreeHGlobal (native_border);
+			return ret;
 		}
 #endif
 	}

@@ -26,6 +26,7 @@
 using System;
 using System.Runtime.InteropServices;
 using static Xwt.Interop.DllImportWebkit;
+using static Xwt.Interop.DllImportGtk;
 
 namespace Xwt.GtkBackend.WebKit
 {
@@ -45,9 +46,13 @@ namespace Xwt.GtkBackend.WebKit
 		}
 
 #if XWT_GTKSHARP3
-
-		bool Gtk.IScrollable.GetBorder (Gtk.Border border) {
-			return true;
+		bool Gtk.IScrollable.GetBorder (out Gtk.Border border) {
+			IntPtr native_border = Marshal.AllocHGlobal (Marshal.SizeOf<Gtk.Border>());
+			bool raw_ret = gtk_scrollable_get_border(Handle, native_border);
+			bool ret = raw_ret;
+			border = Gtk.Border.New (native_border);
+			Marshal.FreeHGlobal (native_border);
+			return ret;
 		}
 #endif
 		
